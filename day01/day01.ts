@@ -21,7 +21,6 @@ function findDuplicateFrequency(lines: string[]) {
 }
 
 const inputFilepath = path.resolve(__dirname, "input");
-console.log(`${inputFilepath}`);
 fs.readFile(inputFilepath, "utf8", (err, data) => {
   if (err) {
     console.error(`${err}`);

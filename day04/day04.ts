@@ -27,13 +27,29 @@ interface Event {
   guardNumber?: number;
 }
 
+interface MinuteEntry {
+  minuteNumber: number;
+  count: number;
+}
 interface Guard {
   id: number;
   minutesAsleep: number[];
+  longestSleptMinute?: MinuteEntry;
+}
+
+function getMaximumSleptMinute(guard: Guard): MinuteEntry | undefined {
+  const result = _.maxBy(_.entries(_.countBy(guard.minutesAsleep)), "[1]");
+  if (result === undefined) {
+    return undefined;
+  }
+  return {
+    minuteNumber: Number(result[0]),
+    count: Number(result[1])
+  };
 }
 
 const lineRegex = /\[([\d\- :]+)\] (falls asleep|wakes up|Guard #(\d+) begins shift)/;
-function part1(lines: string[]) {
+function solution(lines: string[]) {
   const events: Event[] = [];
   for (const s of lines) {
     if (s === "") {
@@ -115,26 +131,45 @@ function part1(lines: string[]) {
     }
   }
   let longestSleepingGuard: Guard | undefined;
+  const method: string = "2";
   for (const guard of guards.values()) {
-    if (
-      longestSleepingGuard === undefined ||
-      guard.minutesAsleep.length > longestSleepingGuard.minutesAsleep.length
-    ) {
-      longestSleepingGuard = guard;
+    if (method === "1") {
+      if (
+        longestSleepingGuard === undefined ||
+        guard.minutesAsleep.length > longestSleepingGuard.minutesAsleep.length
+      ) {
+        longestSleepingGuard = guard;
+      }
+    } else if (method === "2") {
+      const longestSleptMinute = getMaximumSleptMinute(guard);
+      guard.longestSleptMinute = longestSleptMinute;
+      if (
+        longestSleepingGuard === undefined ||
+        (longestSleepingGuard.longestSleptMinute === undefined ||
+          (guard.longestSleptMinute !== undefined &&
+            longestSleepingGuard.longestSleptMinute.count <
+              guard.longestSleptMinute.count))
+      ) {
+        longestSleepingGuard = guard;
+      }
     }
   }
   if (longestSleepingGuard === undefined) {
     throw new Error("Can't find longest sleeping guard.");
   }
-  const result = Number(
-    _.flow(
-      _.countBy,
-      _.entries,
-      _.partialRight(_.maxBy, "[1]"),
-      _.head
-    )(longestSleepingGuard.minutesAsleep)
-  );
-  console.log(`Part 1=${longestSleepingGuard.id * result}`);
+  if (method === "1") {
+    const maxMinute = getMaximumSleptMinute(longestSleepingGuard);
+    if (maxMinute === undefined) {
+      throw new Error(`Could not determine an answer for Part 1`);
+    }
+    const { minuteNumber } = maxMinute;
+    console.log(`Part 1=${longestSleepingGuard.id * minuteNumber}`);
+  } else if (method === "2") {
+    console.log(
+      `Part 2=${longestSleepingGuard.id *
+        longestSleepingGuard.longestSleptMinute!.minuteNumber}`
+    );
+  }
 }
 
 const inputFilepath = path.resolve(__dirname, "input");
@@ -144,5 +179,5 @@ fs.readFile(inputFilepath, "utf8", (err, data) => {
     return;
   }
   const lines = data.split("\n");
-  part1(lines);
+  solution(lines);
 });

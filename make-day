@@ -1,0 +1,17 @@
+#!/usr/bin/env python
+import shutil
+import os
+import argparse
+
+parser = argparse.ArgumentParser()
+parser.add_argument('day')
+args = parser.parse_args()
+day = args.day
+folder_name = f'day{day}'
+if not os.path.exists(folder_name):
+    os.mkdir(folder_name)
+ts_file = os.path.join(folder_name, f'day{day}.ts')
+if not os.path.exists(ts_file):
+    shutil.copyfile('./template.ts', ts_file)
+open(os.path.join(folder_name, 'input'), 'a').close()
+open(os.path.join(folder_name, 'test'), 'a').close()

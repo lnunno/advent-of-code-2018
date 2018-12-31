@@ -5,6 +5,7 @@
   "author": "Lucas Nunno",
   "license": "MIT",
   "devDependencies": {
+    "@types/lodash": "^4.14.119",
     "@types/node": "^10.12.18",
     "lodash": "^4.17.11",
     "moment": "^2.23.0",

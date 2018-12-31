@@ -65,7 +65,7 @@ function countOverlaps(fabric: Fabric) {
 }
 
 const N = 1000;
-let lineRegex = /#(\d+)\W+@\W+(\d+),(\d+):\W+(\d+)x(\d+)/;
+const lineRegex = /#(\d+)\W+@\W+(\d+),(\d+):\W+(\d+)x(\d+)/;
 function part1(lines: string[]) {
   const fabric = Array.from(Array(N), () => new Array(N));
   const context: Context = {

@@ -83,6 +83,10 @@ fs.readFile(inputFilepath, "utf8", (err, data) => {
     return;
   }
   const lines = data.split("\n");
+  console.time("Part 1");
   part1(lines);
+  console.timeEnd("Part 1");
+  console.time("Part 2");
   part2(lines);
+  console.timeEnd("Part 2");
 });

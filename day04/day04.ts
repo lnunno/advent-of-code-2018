@@ -179,5 +179,7 @@ fs.readFile(inputFilepath, "utf8", (err, data) => {
     return;
   }
   const lines = data.split("\n");
+  console.time("Part 1");
   solution(lines);
+  console.timeEnd("Part 1");
 });

@@ -1,5 +1,7 @@
 import * as fs from "fs";
 import * as path from "path";
+import * as moment from "moment";
+import * as _ from "lodash";
 
 const lineRegex = /regex here/;
 function part1(lines: string[]) {

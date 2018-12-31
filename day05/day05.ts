@@ -1,5 +1,6 @@
 import * as fs from "fs";
 import * as path from "path";
+import * as _ from "lodash";
 
 function isLower(s: string) {
   return s === s.toLowerCase();
@@ -40,18 +41,39 @@ function triggerReaction(s: string): string {
   return removeChars(s, j, k);
 }
 
-function part1(lines: string[]) {
-  let s = lines[0];
+function fullyReact(s: string) {
   while (true) {
     const sn = triggerReaction(s);
     if (s === sn) {
-      break;
+      return s;
     } else {
       s = sn;
     }
   }
+}
+
+function part1(lines: string[]) {
+  let s = lines[0];
+  s = fullyReact(s);
   console.log(`Resulting string=${s}`);
   console.log(`Part 1=${s.length}`);
+}
+
+function part2(lines: string[]) {
+  const s = lines[0];
+  let shortestPolymer = s;
+  for (let i = "a".charCodeAt(0); i <= "z".charCodeAt(0); i++) {
+    const sFiltered = _.filter(
+      s,
+      it => it.charCodeAt(0) !== i && it.charCodeAt(0) !== i - 32
+    ).join("");
+    const sReacted = fullyReact(sFiltered);
+    if (sReacted.length < shortestPolymer.length) {
+      shortestPolymer = sReacted;
+    }
+  }
+  console.log(`Result string for Part 2=${shortestPolymer}`);
+  console.log(`Part 2=${shortestPolymer.length}`);
 }
 
 const inputFilepath = path.resolve(__dirname, "input");
@@ -62,4 +84,5 @@ fs.readFile(inputFilepath, "utf8", (err, data) => {
   }
   const lines = data.split("\n");
   part1(lines);
+  part2(lines);
 });
